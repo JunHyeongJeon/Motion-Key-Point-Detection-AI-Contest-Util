@@ -35,6 +35,23 @@ def parse_args():
 def ensemble(in_data):
     
     return ensemble_result 
+def cancat_result(csv_file_list):
+    image_name_and_list_dict = {}
+
+    for index, csv_file in enumerate(tqdm(csv_file_list)):          
+        csv_file_path = os.path.join(args.csv_files_path, csv_file)
+        image_meta = read_input_csv_file(csv_file_path)
+        # print(image_meta)
+        image_name_list = image_meta.keys()
+        if index == 0:
+            keypoint_name_and_list_dict = \
+                    ({keypoint_xy : [] for keypoint_xy in KEYPOINT_XY_LIST})
+            image_name_and_list_dict = \
+                    ({image_name : copy.deepcopy(keypoint_name_and_list_dict) for image_name in image_name_list})
+        for im_name in (image_name_and_list_dict):
+            for ky_name in image_name_and_list_dict[im_name]:
+                image_name_and_list_dict[im_name][ky_name].append(image_meta[im_name][ky_name])
+    return image_name_and_list_dict
 
 def write_output_csv_file(input_dict, meta):
     pass
@@ -55,25 +72,11 @@ if __name__ == '__main__':
     args = parse_args()
     make_dir(args.output_folder_path)
     csv_file_list = os.listdir(args.csv_files_path)
-    image_name_and_list_dict = {}
 
-    for index, csv_file in enumerate(tqdm(csv_file_list)):          
-        csv_file_path = os.path.join(args.csv_files_path, csv_file)
-        image_meta = read_input_csv_file(csv_file_path)
-        # print(image_meta)
-        image_name_list = image_meta.keys()
-        if index == 0:
-            keypoint_name_and_list_dict = \
-                    ({keypoint_xy : [] for keypoint_xy in KEYPOINT_XY_LIST})
-            image_name_and_list_dict = \
-                    ({image_name : copy.deepcopy(keypoint_name_and_list_dict) for image_name in image_name_list})
-        for im_name in (image_name_and_list_dict):
-            for ky_name in image_name_and_list_dict[im_name]:
-                image_name_and_list_dict[im_name][ky_name].append(image_meta[im_name][ky_name])
+    result = cancat_result(csv_file_list)
     with open(os.path.join(args.output_folder_path, "output.json"), "w") as json_file:
-        json.dump(image_name_and_list_dict, json_file)
-
-
+        json.dump(result, json_file)
+    
     # print(image_name_and_list_dict)
         
     # dict1 = {'bookA': 2, 'bookB': 2, 'bookC': {"1":4, "2":3}}
