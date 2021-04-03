@@ -32,9 +32,15 @@ def parse_args():
         default='.\\ensemble')
     return parser.parse_args()
 
-def ensemble(in_data):
-    
+def ensemble(in_data):  
     return ensemble_result 
+
+def reshape_ensemble_result(in_data):
+    pass
+
+def write_output_csv_file(input_dict, meta):
+    pass
+
 def cancat_result(csv_file_list):
     image_name_and_list_dict = {}
 
@@ -52,9 +58,6 @@ def cancat_result(csv_file_list):
             for ky_name in image_name_and_list_dict[im_name]:
                 image_name_and_list_dict[im_name][ky_name].append(image_meta[im_name][ky_name])
     return image_name_and_list_dict
-
-def write_output_csv_file(input_dict, meta):
-    pass
 
 def read_input_csv_file(csv_file_path):
     with open(csv_file_path, newline='') as csvfile:
@@ -77,15 +80,5 @@ if __name__ == '__main__':
     with open(os.path.join(args.output_folder_path, "output.json"), "w") as json_file:
         json.dump(result, json_file)
     
-    # print(image_name_and_list_dict)
-        
-    # dict1 = {'bookA': 2, 'bookB': 2, 'bookC': {"1":4, "2":3}}
-    # dict2 = {'bookC': {"1":1, "2":2}, 'bookD': 4, 'bookE': 5}
-    # dict3 = defaultdict(list)
-    # for k, v in chain(dict1.items(), dict2.items()):
-    #     dict3[k].append(v)
-     
-    # for k, v in dict3.items():
-    #     print(k, v)
 
     # metas = get_image_meta()
