@@ -2,7 +2,6 @@
 
 # TODO: need refactoring
 
-import numpy as np
 import cv2
 import json
 import os
