@@ -10,7 +10,7 @@ def parse_args():
     parser.add_argument('--image_folder_path', type=str, help='이미지들이 있는 경로', 
         default='C:\\Users\\Jun\\Downloads\\1. open\\test_imgs') 
     parser.add_argument('--csv_file_path', type=str, help=' CSV파일이 있는 경로',     
-        default='C:\\Users\\Jun\\Downloads\\submission_new_version_2.csv')
+        default='C:\\Users\\Jun\\Downloads\\submission_new_version_2_bugfix.csv')
     parser.add_argument('--output_folder_path', type=str, help='출력물이 있을 폴더',
         default='.\\output')
     parser.add_argument('--how_many', type=int, help='몇개나 이미지를 처리할지 0이면 전체',
@@ -22,12 +22,12 @@ def visualize_image_annotation(image_metas):
     target_image_path = os.path.join(args.image_folder_path, target_image_name)
  
     img = cv2.imread(target_image_path, cv2.IMREAD_COLOR)
-    for index, keypoint in enumerate(KEYPOINT_LIST):
-        target_point = set_coordinate_as_int(image_meta[keypoint]) 
-        if is_xy_list_coordinate_exist(target_point):
+    for index, keypoint_name in enumerate(KEYPOINT_LIST):
+        target_coordinate = set_coordinate_as_int(image_meta[keypoint_name]) 
+        if is_xy_list_coordinate_exist(target_coordinate):
             continue    
-        img = cv2.circle(img, target_point, 3, COLOR_RED, 1)
-        cv2.putText(img,  keypoint, target_point, cv2.FONT_HERSHEY_SIMPLEX, 0.4, COLOR_WHITE, 1, cv2.LINE_AA)
+        img = cv2.circle(img, target_coordinate, 3, COLOR_RED, 1)
+        cv2.putText(img,  keypoint_name, target_coordinate, cv2.FONT_HERSHEY_SIMPLEX, 0.4, COLOR_WHITE, 1, cv2.LINE_AA)
 
     make_dir(args.output_folder_path)
     output_folder_path_with_csv_name = os.path.join(args.output_folder_path, get_csv_file_name(args.csv_file_path))
