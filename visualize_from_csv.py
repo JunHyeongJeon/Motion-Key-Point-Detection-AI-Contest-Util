@@ -35,12 +35,26 @@ def visualize_image_annotation(image_metas):
 
     output_image_path = os.path.join(output_folder_path_with_csv_name, target_image_name)
     cv2.imwrite(output_image_path, img)
-    
+
+def get_image_meta_for_visualize(csv_file_path):
+    image_meta_list = []
+    with open(csv_file_path, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for index, row in enumerate(reader):
+            image_meta = {}
+            image_meta["image_name"] = row['image']
+            for keypoint in KEYPOINT_LIST:
+                image_meta[keypoint] = get_row_data(row, keypoint)  
+            image_meta_list.append(image_meta)
+
+    return image_meta_list
+
+
 if __name__ == "__main__":
     global args
     args = parse_args()
 
-    metas = get_image_meta(args.csv_file_path)
+    metas = get_image_meta_for_visualize(args.csv_file_path)
     for index, image_meta in enumerate(tqdm(metas)):
         if (index > args.how_many) and args.how_many != 0:
             break
