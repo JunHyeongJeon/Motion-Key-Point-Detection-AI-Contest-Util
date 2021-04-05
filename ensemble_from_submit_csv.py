@@ -29,9 +29,9 @@ KEYPOINT_XY_LIST = ["nose_x", "nose_y",
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--csv_files_path', type=str, help=' CSV파일들이 있는 경로',     
-        default='C:\\Users\\Jun\\Downloads\\csv')
+        default='./csv')
     parser.add_argument('--output_folder_path', type=str, help='출력물이 있을 폴더',
-        default='.\\ensemble')
+        default='./ensemble')
     parser.add_argument('--ensemble', type=str, help='어떤 방식으로 앙상블 [median, average]',
         default='median')
     return parser.parse_args()
@@ -82,7 +82,10 @@ def cancat(csv_file_list):
                     ({image_name : copy.deepcopy(keypoint_name_and_list_dict) for image_name in image_name_list})
         for im_name in (image_name_and_list_dict):
             for ky_name in image_name_and_list_dict[im_name]:
-                image_name_and_list_dict[im_name][ky_name].append(image_meta[im_name][ky_name])
+                if len(image_meta[im_name][ky_name]) == 0:
+                    continue
+                if float(image_meta[im_name][ky_name]) > 0: 
+                    image_name_and_list_dict[im_name][ky_name].append(image_meta[im_name][ky_name])
     return image_name_and_list_dict
 
 def write_output_csv_file(csv_file_path, data):
@@ -120,11 +123,9 @@ if __name__ == '__main__':
     make_dir(args.output_folder_path)
     csv_file_list = os.listdir(args.csv_files_path)
     current_time = time.ctime().replace(" ", "-").replace(":", "_")
-
-    print("File preprocessing...")
-    write_list_to_txt_file(os.path.join(args.output_folder_path, current_time+"_meta.txt"), csv_file_list)
-    
+  
     cancat_result = cancat(csv_file_list)
+    write_list_to_txt_file(os.path.join(args.output_folder_path, current_time+"_meta.txt"), csv_file_list)
     write_output_json_file(os.path.join(args.output_folder_path, current_time+"_cancat.json"), cancat_result)
     
     print("Ensemble processing...")
