@@ -1,12 +1,6 @@
 import os
-from tqdm import tqdm 
-from _utils import(make_dir, KEYPOINT_XY_LIST, 
-    write_output_csv_file, read_input_csv_file)
+from _utils import(make_dir, write_output_csv_file, read_input_csv_file)
 import argparse
-import copy
-import time
-import numpy as np
-import csv
 
 def parse_args():
     parser = argparse.ArgumentParser()
