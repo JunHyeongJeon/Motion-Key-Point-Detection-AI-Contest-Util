@@ -3,6 +3,7 @@ ensemble
 csv
 csv_fix
 csv_compare
+ensemble_input
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
