@@ -2,6 +2,7 @@ import os
 import csv
 import copy
 import json
+import time
 
 KEYPOINT_LIST = ["nose", "left_eye", "right_eye", "left_ear", "right_ear",\
                 "left_shoulder", "right_shoulder", "left_elbow", "right_elbow",\
@@ -38,6 +39,9 @@ CSV_HEAD = ["image", "nose_x", "nose_y",
 MY_TEST = "TEST"
 COLOR_WHITE = (255, 255, 255)
 COLOR_RED = (0, 0, 255)
+
+def current_time():
+    return time.ctime().replace(" ", "-").replace(":", "_")
 
 def make_dir(dir_name):
     try:

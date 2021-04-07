@@ -3,11 +3,11 @@ import os
 from tqdm import tqdm 
 from _utils import (make_dir, write_output_csv_file, 
                     write_output_json_file, write_list_to_txt_file,
-                    read_input_csv_file, KEYPOINT_XY_LIST)
+                    read_input_csv_file, KEYPOINT_XY_LIST, current_time)
 import argparse
 import copy
-import time
 import numpy as np
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -88,18 +88,17 @@ if __name__ == '__main__':
     args = parse_args()
     make_dir(args.output_folder_path)
     csv_file_list = os.listdir(args.csv_files_path)
-    current_time = time.ctime().replace(" ", "-").replace(":", "_")
   
     cancat_result = cancat(csv_file_list)
-    write_list_to_txt_file(os.path.join(args.output_folder_path, current_time+"_meta.txt"), csv_file_list)
-    write_output_json_file(os.path.join(args.output_folder_path, current_time+"_cancat.json"), cancat_result)
+    write_list_to_txt_file(os.path.join(args.output_folder_path, current_time()+"_meta.txt"), csv_file_list)
+    write_output_json_file(os.path.join(args.output_folder_path, current_time()+"_cancat.json"), cancat_result)
     
     print("Ensemble processing...")
     ensemble_result = ensemble(cancat_result)
 
     print("Output file processing...")
-    write_output_json_file(os.path.join(args.output_folder_path, current_time+"_ensemble.json"), ensemble_result)
+    write_output_json_file(os.path.join(args.output_folder_path, current_time()+"_ensemble.json"), ensemble_result)
     
     reshape_result = reshape_ensemble_result_to_output_csv(ensemble_result)
-    write_output_csv_file(os.path.join(args.output_folder_path, current_time+ "_output.csv"), reshape_result)
+    write_output_csv_file(os.path.join(args.output_folder_path, current_time()+ "_output.csv"), reshape_result)
     print("Done!")
