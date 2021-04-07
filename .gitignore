@@ -2,6 +2,8 @@ output
 ensemble
 csv
 csv_fix
+csv_compare
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
