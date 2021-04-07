@@ -6,17 +6,14 @@ import cv2
 import json
 import os
 from tqdm import tqdm 
+from _utils import COLOR_WHITE, COLOR_RED
 
-# IMAGE_FOLDER_PATH = "D:\\keypoint\\daycon\\train_imgs"
-# JSON_FILE_PATH = "D:\\keypoint\\daycon\\person_keypoints_train_daycon.json"
+
 IMAGE_FOLDER_PATH = "D:\\keypoint\\val2017"
 JSON_FILE_PATH = "D:\\keypoint\\annotations\\person_keypoints_val2017.json"
 
 OUTPUT_FOLDER_PATH = ".\\val"
 HOW_MANY = 0 # all = 0
-
-COLOR_WHITE = (255, 255, 255)
-COLOR_RED = (0, 0, 255)
 
 def get_image_meta(json_file_path):
     with open(json_file_path) as json_file:
@@ -24,13 +21,12 @@ def get_image_meta(json_file_path):
         return json_data
 
 def tag_image_annotation(image_meta, image_annotation_list):
-    # TODO: for문으로 수정
-
 
     target_image_name = image_meta["file_name"]
     target_image_id = image_meta["id"]
     target_image_path = os.path.join(IMAGE_FOLDER_PATH, target_image_name)
     target_image_keypoints = []
+    # Dirty code
     for image_annotation in image_annotation_list :
         if image_annotation["id"] == target_image_id:
             if image_annotation["category_id"] != 1:

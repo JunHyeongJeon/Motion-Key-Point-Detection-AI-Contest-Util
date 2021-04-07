@@ -8,13 +8,13 @@ import argparse
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--image_folder_path', type=str, help='이미지들이 있는 경로', 
-        default='C:\\Users\\Jun\\Downloads\\1. open\\test_imgs') 
+        default='E:\\1.open\\test_imgs') 
     parser.add_argument('--csv_file_path', type=str, help=' CSV파일이 있는 경로',     
-        default='C:\\Users\\Jun\\Downloads\\submission_new_version_2_bugfix.csv')
+        default='./csv_fix/test.csv')
     parser.add_argument('--output_folder_path', type=str, help='출력물이 있을 폴더',
-        default='.\\output')
+        default='./output')
     parser.add_argument('--how_many', type=int, help='몇개나 이미지를 처리할지 0이면 전체',
-        default=10)
+        default=100)
     return parser.parse_args()
 
 def visualize_image_annotation(image_metas):

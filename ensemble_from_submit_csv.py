@@ -1,30 +1,13 @@
 #-*- coding:utf-8 -*-
 import os
 from tqdm import tqdm 
-import csv
-from _utils import make_dir
+from _utils import (make_dir, write_output_csv_file, 
+                    write_output_json_file, write_list_to_txt_file,
+                    read_input_csv_file, KEYPOINT_XY_LIST)
 import argparse
-from itertools import chain
-from collections import defaultdict
-import json
 import copy
 import time
 import numpy as np
-
-KEYPOINT_XY_LIST = ["nose_x", "nose_y", 
-                "left_eye_x", "left_eye_y", "right_eye_x", "right_eye_y", 
-                "left_ear_x", "left_ear_y", "right_ear_x", "right_ear_y", 
-                "left_shoulder_x", "left_shoulder_y", "right_shoulder_x", "right_shoulder_y", 
-                "left_elbow_x", "left_elbow_y", "right_elbow_x", "right_elbow_y", 
-                "left_wrist_x", "left_wrist_y", "right_wrist_x", "right_wrist_y", 
-                "left_hip_x", "left_hip_y", "right_hip_x", "right_hip_y", 
-                "left_knee_x", "left_knee_y", "right_knee_x", "right_knee_y", 
-                "left_ankle_x", "left_ankle_y", "right_ankle_x", "right_ankle_y", 
-                "neck_x", "neck_y", 
-                "left_palm_x", "left_palm_y", "right_palm_x", "right_palm_y", 
-                "spine2(back)_x", "spine2(back)_y", "spine1(waist)_x", "spine1(waist)_y", 
-                "left_instep_x", "left_instep_y", "right_instep_x", "right_instep_y"]
-
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -57,23 +40,33 @@ def ensemble(annotations):
 
     return ensemble_result 
 
-def reshape_ensemble_result_to_output_csv(ensem_result):
+def reshape_ensemble_result_to_output_csv(ensemble_result):
     reshape_output = []
-    for image_name in ensem_result:
-        temp = ensem_result[image_name]
+    for image_name in ensemble_result:
+        temp = ensemble_result[image_name]
         temp["image"] = image_name
         reshape_output.append(temp)
         # for keypoint in KEYPOINT_XY_LIST:
 
     return reshape_output
 
+def reshape_csv_list_for_cancat_input(csv_list_object):
+    reshape_dict = {}
+    for index, row in enumerate(csv_list_object):
+        image_name = row["image"]
+        del row["image"]
+        reshape_dict[image_name] = row
+
+    return reshape_dict
+
 def cancat(csv_file_list):
     image_name_and_list_dict = {}
 
     for index, csv_file in enumerate(tqdm(csv_file_list)):          
         csv_file_path = os.path.join(args.csv_files_path, csv_file)
-        image_meta = read_input_csv_file(csv_file_path)
-        # print(image_meta)
+        csv_list = read_input_csv_file(csv_file_path)
+        image_meta = reshape_csv_list_for_cancat_input(csv_list)
+
         image_name_list = image_meta.keys()
         if index == 0:
             keypoint_name_and_list_dict = \
@@ -87,35 +80,8 @@ def cancat(csv_file_list):
                 if float(image_meta[im_name][ky_name]) > 0: 
                     image_name_and_list_dict[im_name][ky_name].append(image_meta[im_name][ky_name])
     return image_name_and_list_dict
+  
 
-def write_output_csv_file(csv_file_path, data):
-    with open(csv_file_path, "w", newline="") as csvfile:
-        fieldnames = copy.deepcopy(KEYPOINT_XY_LIST)
-        fieldnames.insert(0, "image")
-
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()     
-        for element in data:
-            writer.writerow(element)
-
-def write_output_json_file(json_file_path, data):
-    with open(json_file_path, "w") as json_file:
-        json.dump(data, json_file)
-
-def write_list_to_txt_file(txt_file_path, data):
-    with open(txt_file_path, "w") as txt_file:
-        txt_file.write('\n'.join(data))
-    
-def read_input_csv_file(csv_file_path):
-    with open(csv_file_path, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        reshape_dict = {}
-        for index, row in enumerate(reader):
-            image_name = row["image"]
-            del row["image"]
-            reshape_dict[image_name] = row
-
-        return reshape_dict
 
 if __name__ == '__main__':
     global args
