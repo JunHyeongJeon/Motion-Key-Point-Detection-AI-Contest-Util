@@ -2,6 +2,9 @@ import os
 from _utils import(make_dir, write_output_csv_file, read_input_csv_file, current_time)
 import argparse
 
+PALM_CONTROL_VALUE = 20
+ANKLE_CONTROL_VALUE = 15
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--csv_file_path', type=str, help=' CSV파일이 있는 경로',     
@@ -14,14 +17,14 @@ def fix_palm_coordinate(csv_reader):
     output_list = []
     for index, row in enumerate(csv_reader):
         if float(row["left_elbow_y"]) < float(row["left_wrist_y"]):
-            row["left_palm_y"] = float(row["left_wrist_y"]) + 20
+            row["left_palm_y"] = float(row["left_wrist_y"]) + PALM_CONTROL_VALUE
         else :
-            row["left_palm_y"] = float(row["left_wrist_y"]) - 20
+            row["left_palm_y"] = float(row["left_wrist_y"]) - PALM_CONTROL_VALUE
         
         if float(row["right_elbow_y"]) < float(row["right_wrist_y"]):
-            row["right_palm_y"] = float(row["right_wrist_y"]) + 20
+            row["right_palm_y"] = float(row["right_wrist_y"]) + PALM_CONTROL_VALUE
         else :
-            row["right_palm_y"] = float(row["right_wrist_y"]) - 20
+            row["right_palm_y"] = float(row["right_wrist_y"]) - PALM_CONTROL_VALUE
         output_list.append(row)
 
     return output_list
@@ -29,8 +32,8 @@ def fix_palm_coordinate(csv_reader):
 def fix_instep_coordinate(csv_reader):
     output_list = []
     for index, row in enumerate(csv_reader):
-        row["left_instep_y"] = float(row["left_ankle_y"]) + 15
-        row["right_instep_y"] = float(row["right_ankle_y"]) + 15
+        row["left_instep_y"] = float(row["left_ankle_y"]) + PALM_CONTROL_VALUE
+        row["right_instep_y"] = float(row["right_ankle_y"]) + PALM_CONTROL_VALUE
         output_list.append(row)
     return output_list
 
