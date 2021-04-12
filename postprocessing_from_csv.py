@@ -22,9 +22,9 @@ def fix_palm_coordinate(csv_reader):
             row["left_palm_y"] = float(row["left_wrist_y"]) - PALM_CONTROL_VALUE
         
         if float(row["right_elbow_y"]) < float(row["right_wrist_y"]):
-            row["right_palm_y"] = float(row["right_wrist_y"]) + PALM_CONTROL_VALUE
+            row["right_palm_y"] = float(row["right_wrist_y"]) + ANKLE_CONTROL_VALUE
         else :
-            row["right_palm_y"] = float(row["right_wrist_y"]) - PALM_CONTROL_VALUE
+            row["right_palm_y"] = float(row["right_wrist_y"]) - ANKLE_CONTROL_VALUE
         output_list.append(row)
 
     return output_list
